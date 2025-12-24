@@ -2,7 +2,7 @@ import os
 import csv
 from io import StringIO
 from flask import Response
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, redirect
 
 # --- Core backend imports ---
 from db import (
@@ -17,6 +17,10 @@ from storage import save_upload
 # App setup
 # -------------------------------------------------
 app = Flask(__name__)
+@app.route("/")
+def home():
+    return redirect("/upload")
+
 
 # Initialize DB once on startup
 init_db()
@@ -44,6 +48,11 @@ def dashboard_candidate_detail(candidate_id):
     if not candidate:
         return jsonify({"error": "Not found"}), 404
     return jsonify(candidate)
+@app.route("/api/dashboard/clear", methods=["POST"])
+def clear_dashboard():
+    from db import delete_all_candidates
+    delete_all_candidates()
+    return jsonify({"status": "ok"})
 
 
 # -------------------------------------------------
@@ -53,6 +62,13 @@ def dashboard_candidate_detail(candidate_id):
 def upload_and_screen():
     job_description = request.form.get("job_description")
     files = request.files.getlist("resumes")
+    MAX_RESUMES = 30
+
+    if len(files) > MAX_RESUMES:
+        return jsonify({
+            "error": f"Batch limit exceeded. Maximum {MAX_RESUMES} resumes allowed per upload."
+        }), 400
+
 
     if not job_description or not files:
         return jsonify({"error": "Missing job description or resumes"}), 400
