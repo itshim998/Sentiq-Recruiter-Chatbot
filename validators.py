@@ -10,3 +10,4 @@ def validate_text_field(text: str, name: str, min_len=20, max_len=20_000):
         raise ValueError(f"{name} is too long")
 
     return stripped
+
