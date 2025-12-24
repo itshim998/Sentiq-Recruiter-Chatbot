@@ -1,350 +1,320 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-ui-mode="desktop">
 <head>
   <meta charset="UTF-8" />
-  <title>Recruiter Dashboard | SentIQ</title>
+  <title>SentIQ Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    /* -----------------------------
-       Design System (shared)
-       ----------------------------- */
     :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --primary: #2563eb;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e5e7eb;
-
-      --success: #16a34a;
-      --warning: #f59e0b;
-      --danger: #dc2626;
-
-      --radius: 14px;
-      --shadow: 0 12px 30px rgba(0,0,0,0.06);
+      --nav-height: 64px;
+      --radius: 16px;
+      --transition: 0.25s ease;
+      --gradient: linear-gradient(90deg,#ff4fd8,#7a5cff,#3b82f6);
     }
 
-    * {
-      box-sizing: border-box;
+    :root[data-theme="dark"] {
+      --bg:#0b0f1a;
+      --card:rgba(255,255,255,0.05);
+      --border:rgba(255,255,255,0.08);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
     }
+
+    :root[data-theme="light"] {
+      --bg:#f8dacc;
+      --card:rgba(255,255,255,0.9);
+      --border:rgba(0,0,0,0.08);
+      --text:#0b1220;
+      --muted:#4b5563;
+    }
+
+    * { box-sizing:border-box; }
 
     body {
-      margin: 0;
-      padding: 28px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui;
-      background: var(--bg);
-      color: var(--text);
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      padding-top:var(--nav-height);
     }
 
-    /* -----------------------------
-       Layout
-       ----------------------------- */
+    /* ---------- NAV ---------- */
+    .top-nav {
+      position:fixed;
+      inset:0 0 auto 0;
+      height:var(--nav-height);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 18px;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg,rgba(0,0,0,0.18),rgba(0,0,0,0.04));
+      border-bottom:1px solid var(--border);
+      z-index:50;
+    }
+
+    .nav-buttons { display:flex; gap:10px; align-items:center; }
+    .nav-buttons a,.nav-buttons button {
+      background:transparent;
+      border:none;
+      color:var(--text);
+      font-weight:600;
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .nav-buttons a:hover,.nav-buttons button:hover {
+      background:rgba(255,255,255,0.06);
+    }
+   
+    
+
+    /* ---------- LAYOUT ---------- */
     .container {
-      max-width: 1200px;
-      margin: auto;
+      max-width:1200px;
+      margin:auto;
+      padding:32px;
     }
 
-    h1 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
+    h1 { font-size:32px; margin:0 0 24px; }
 
-    .subtitle {
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
-
+    /* ---------- CARDS ---------- */
     .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      margin-bottom: 24px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px;
+      margin-bottom:22px;
+      backdrop-filter:blur(14px);
     }
 
-    /* -----------------------------
-       Controls
-       ----------------------------- */
-    .controls {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      align-items: flex-end;
+    html[data-ui-mode="desktop"] .card {
+      background:transparent;
+      border:none;
+      padding:8px 0;
     }
+      
 
-    label {
-      font-size: 13px;
-      font-weight: 600;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    select, input {
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      font-size: 14px;
-      width: 160px;
-    }
-
-    button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(37,99,235,0.35);
-    }
-
-    /* -----------------------------
-       Table
-       ----------------------------- */
+    /* ---------- TABLE ---------- */
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
+      width:100%;
+      border-collapse:collapse;
     }
 
     th {
-      text-align: left;
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding-bottom: 10px;
+      text-align:left;
+      font-size:11px;
+      text-transform:uppercase;
+      color:var(--muted);
+      padding-bottom:10px;
     }
 
     td {
-      padding: 14px 10px;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-    }
-
-    tr {
-      transition: background 0.15s ease, transform 0.15s ease;
+      padding:14px 8px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
     }
 
     tr:hover {
-      background: #f1f5f9;
-      transform: scale(1.002);
-      cursor: pointer;
+      background:rgba(255,255,255,0.04);
+      cursor:pointer;
     }
 
-    /* -----------------------------
-       Status Badges
-       ----------------------------- */
     .badge {
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      display: inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:600;
     }
 
-    .interview {
-      background: rgba(22,163,74,0.15);
-      color: var(--success);
+    .interview { background:rgba(34,197,94,0.15); color:#22c55e; }
+    .hold { background:rgba(234,179,8,0.15); color:#eab308; }
+    .reject { background:rgba(239,68,68,0.15); color:#ef4444; }
+
+    /* ---------- SPLASH ---------- */
+    .splash-overlay {
+      position:fixed;
+      inset:0;
+      background:var(--bg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:18px;
+      z-index:9999;
+      transition:opacity 0.6s ease;
+    }
+    .splash-overlay.hidden {
+      opacity:0;
+      pointer-events:none;
     }
 
-    .hold {
-      background: rgba(245,158,11,0.15);
-      color: var(--warning);
+    .spiral {
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      background:conic-gradient(from 0deg,#7a5cff,#ff4fd8,#3b82f6,#7a5cff);
+      mask:radial-gradient(circle at center,transparent 40%,black 41%);
+      -webkit-mask:radial-gradient(circle at center,transparent 40%,black 41%);
+      animation:spin 1s linear infinite;
     }
-
-    .reject {
-      background: rgba(220,38,38,0.15);
-      color: var(--danger);
-    }
-
-    /* -----------------------------
-       Details Panel
-       ----------------------------- */
-    .details p {
-      margin: 8px 0;
-      line-height: 1.5;
-    }
-
-    .details pre {
-      background: #f8fafc;
-      padding: 16px;
-      border-radius: 10px;
-      overflow-x: auto;
-      font-size: 13px;
-      border: 1px solid var(--border);
-    }
-
-    /* -----------------------------
-       Animations
-       ----------------------------- */
-    .fade-in {
-      animation: fadeIn 0.35s ease-out forwards;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
+    @keyframes spin { to { transform:rotate(360deg); } }
   </style>
 </head>
 
 <body>
 
-  <div class="container fade-in">
+<!-- SPLASH -->
+<div class="splash-overlay" id="splashOverlay">
+  <div class="spiral"></div>
+</div>
 
-    <h1>Recruiter Dashboard</h1>
-    <p class="subtitle">
-      Review, filter, and inspect screened candidates.
-    </p>
+<!-- NAV -->
+<div class="top-nav">
+  <strong>SentIQ</strong>
+  <div class="nav-buttons">
+    <a href="/upload">Upload</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/api/export/candidates">Export</a>
+    <button id="themeToggle">🌙</button>
+  </div>
+</div>
+<div style="display:flex; gap:10px; align-items:center; margin-bottom:20px; padding:0 32px;">
+  <button id="clearBtn" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:600; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(239,68,68,0.3)'" onmouseout="this.style.background='rgba(239,68,68,0.2)'">🗑️ Clear All Reports</button>
+  <span id="timezoneInfo" style="color:var(--muted); font-size:12px;"></span>
+</div>
 
-    <!-- Controls -->
-    <div class="card">
-      <div class="controls">
-        <div>
-          <label>Decision</label>
-          <select id="filterDecision" onchange="applyFilters()">
-            <option value="">All</option>
-            <option value="interview">Interview</option>
-            <option value="hold">Hold</option>
-            <option value="reject">Reject</option>
-          </select>
-        </div>
 
-        <div>
-          <label>Min Score</label>
-          <input id="minScore" type="number" min="0" max="100" value="0" onchange="applyFilters()" />
-        </div>
+<!-- CONTENT -->
+<div class="container">
+  <h1>Dashboard</h1>
 
-        <div>
-          <label>Sort</label>
-          <select id="sortBy" onchange="applyFilters()">
-            <option value="created_at_desc">Newest</option>
-            <option value="score_desc">Score ↓</option>
-            <option value="score_asc">Score ↑</option>
-          </select>
-        </div>
-
-        <div style="margin-left:auto;">
-          <button onclick="downloadCSV()">⬇ Download CSV</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Candidates Table -->
-    <div class="card">
-      <table id="candidates">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Score</th>
-            <th>Decision</th>
-            <th>Confidence</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- Details Panel -->
-    <div class="card details" id="details">
-      <em>Select a candidate to view details</em>
-    </div>
-
+  <div class="card">
+    <table id="candidates">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Score</th>
+          <th>Decision</th>
+          <th>Confidence</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
-  <script>
-    let allCandidates = [];
+  <div class="card" id="details">
+    <em>Select a candidate to view details.</em>
+  </div>
+</div>
 
-    async function loadCandidates() {
-      const res = await fetch("/api/dashboard/candidates");
-      allCandidates = await res.json();
-      applyFilters();
-    }
+<!-- SPLASH REMOVAL (ROBUST) -->
+<script>
+(function(){
+  const overlay = document.getElementById("splashOverlay");
+  if (!overlay) return;
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+    setTimeout(() => overlay.remove(), 700);
+  }, 1000);
+})();
+</script>
 
-    function applyFilters() {
-      let data = [...allCandidates];
+<!-- DASHBOARD LOGIC -->
+<script>
+let allCandidates = [];
 
-      const decision = document.getElementById("filterDecision").value;
-      const minScore = parseInt(document.getElementById("minScore").value || 0);
-      const sortBy = document.getElementById("sortBy").value;
+async function loadCandidates(){
+  const res = await fetch("/api/dashboard/candidates");
+  allCandidates = await res.json();
+  renderTable(allCandidates);
+}
 
-      if (decision) {
-        data = data.filter(c => c.recommendation === decision);
-      }
+function renderTable(data){
+  const tbody = document.querySelector("#candidates tbody");
+  tbody.innerHTML = "";
+  data.forEach(c=>{
+    const row = document.createElement("tr");
+    const localTime = new Date(c.created_at).toLocaleString(undefined, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    row.innerHTML = `
+      <td>${c.id}</td>
+      <td>${c.score}</td>
+      <td><span class="badge ${c.recommendation}">${c.recommendation}</span></td>
+      <td>${c.confidence}</td>
+      <td>${localTime}</td>
+    `;
+    row.onclick = () => loadDetails(c.id);
+    tbody.appendChild(row);
+  });
+}
 
-      data = data.filter(c => c.score >= minScore);
+async function loadDetails(id){
+  const res = await fetch(`/api/dashboard/candidate/${id}`);
+  const c = await res.json();
+  document.getElementById("details").innerHTML = `
+    <h3>Candidate ${c.id}</h3>
+    <p><strong>Score:</strong> ${c.score}</p>
+    <p><strong>Pros:</strong> ${c.pros.join(", ")}</p>
+    <p><strong>Cons:</strong> ${c.cons.join(", ")}</p>
+    <p><strong>Decision:</strong> ${c.recommendation}</p>
+    <pre>${c.resume_text}</pre>
+  `;
+}
 
-      if (sortBy === "score_desc") {
-        data.sort((a, b) => b.score - a.score);
-      } else if (sortBy === "score_asc") {
-        data.sort((a, b) => a.score - b.score);
-      } else {
-        data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      }
+// Detect and display user timezone
+(function(){
+  const tzInfo = document.getElementById("timezoneInfo");
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const now = new Date();
+  const offset = -now.getTimezoneOffset() / 60;
+  const offsetStr = offset >= 0 ? `+${offset}` : `${offset}`;
+  tzInfo.textContent = `📍 ${tz} (UTC${offsetStr})`;
+})();
 
-      renderTable(data);
-    }
+loadCandidates();
+</script>
 
-    function renderTable(data) {
-      const tbody = document.querySelector("#candidates tbody");
-      tbody.innerHTML = "";
+<!-- THEME TOGGLE -->
+<script>
+(function(){
+  const root=document.documentElement;
+  const btn=document.getElementById("themeToggle");
+  const saved=localStorage.getItem("sentiq-theme")||"dark";
+  root.setAttribute("data-theme",saved);
+  btn.textContent=saved==="dark"?"🌙":"☀️";
+  btn.onclick=()=>{
+    const next=root.getAttribute("data-theme")==="dark"?"light":"dark";
+    root.setAttribute("data-theme",next);
+    localStorage.setItem("sentiq-theme",next);
+    btn.textContent=next==="dark"?"🌙":"☀️";
+  };
+})();
+</script>
+<script>
+document.getElementById("clearBtn").onclick = async () => {
+  if (!confirm("⚠️ This will PERMANENTLY delete all " + allCandidates.length + " reports and reset IDs. Continue?")) return;
 
-      data.forEach(c => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${c.id}</td>
-          <td>${c.score}</td>
-          <td><span class="badge ${c.recommendation}">${c.recommendation}</span></td>
-          <td>${c.confidence}</td>
-          <td>${new Date(c.created_at).toLocaleString()}</td>
-        `;
-        row.onclick = () => loadDetails(c.id);
-        tbody.appendChild(row);
-      });
-    }
-
-    async function loadDetails(id) {
-      const res = await fetch(`/api/dashboard/candidate/${id}`);
-      const c = await res.json();
-
-      const details = document.getElementById("details");
-      details.classList.remove("fade-in");
-      void details.offsetWidth;
-      details.classList.add("fade-in");
-
-      details.innerHTML = `
-        <h3>Candidate ${c.id}</h3>
-        <p><strong>Score:</strong> ${c.score}</p>
-        <p><strong>Pros:</strong> ${c.pros.join(", ")}</p>
-        <p><strong>Cons:</strong> ${c.cons.join(", ")}</p>
-        <p><strong>Rationale:</strong> ${c.rationale}</p>
-        <p><strong>Decision:</strong> ${c.recommendation}</p>
-        <p><strong>Reason:</strong> ${c.decision_reason}</p>
-        <hr/>
-        <pre>${c.resume_text}</pre>
-      `;
-    }
-
-    function downloadCSV() {
-      window.location.href = "/api/export/candidates";
-    }
-
+  const res = await fetch("/api/dashboard/clear", { method: "POST" });
+  if (res.ok) {
+    allCandidates = [];
+    renderTable([]);
+    document.getElementById("details").innerHTML =
+      "<em>Select a candidate to view details</em>";
+    alert("✅ All reports cleared and IDs reset.");
     loadCandidates();
-  </script>
+  } else {
+    alert("❌ Failed to clear reports.");
+  }
+};
+</script>
 
 </body>
 </html>
