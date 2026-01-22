@@ -117,14 +117,6 @@ def dashboard():
 
 
 # -------------------------------------------------
-# Dashboard UI
-# -------------------------------------------------
-@app.route("/dashboard")
-def dashboard():
-    return render_template("dashboard.html")
-
-
-# -------------------------------------------------
 # Debug helper (optional but useful)
 # -------------------------------------------------
 @app.route("/__routes")
