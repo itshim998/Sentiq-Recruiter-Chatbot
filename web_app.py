@@ -2,7 +2,7 @@ import os
 import csv
 from io import StringIO
 from flask import Response
-from flask import Flask, jsonify, render_template, request, redirect
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 # --- Core backend imports ---
@@ -35,13 +35,20 @@ CORS(app, resources={
     }
 })
 
-@app.route("/")
-def home():
-    return redirect("/upload")
-
-
 # Initialize DB once on startup
 init_db()
+
+
+# -------------------------------------------------
+# Root endpoint - API status
+# -------------------------------------------------
+@app.route("/")
+def root():
+    return jsonify({
+        "service": "RecruiterIQ API",
+        "status": "running",
+        "frontend": "https://recruiteriq.sentiqlabs.com"
+    })
 
 
 # -------------------------------------------------
@@ -109,14 +116,6 @@ def upload_and_screen():
 
 
 # -------------------------------------------------
-# Dashboard UI
-# -------------------------------------------------
-@app.route("/dashboard")
-def dashboard():
-    return render_template("dashboard.html")
-
-
-# -------------------------------------------------
 # Debug helper (optional but useful)
 # -------------------------------------------------
 @app.route("/__routes")
@@ -125,12 +124,8 @@ def show_routes():
 
 
 # -------------------------------------------------
-# App entry point (MUST BE LAST)
+# Export API
 # -------------------------------------------------
-@app.route("/upload")
-def upload_page():
-    return render_template("upload.html")
-
 @app.route("/api/export/candidates", methods=["GET"])
 def export_candidates_csv():
     candidates = list_candidates(limit=10_000)
