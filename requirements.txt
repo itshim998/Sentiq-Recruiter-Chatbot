@@ -6,4 +6,8 @@ groq
 pdfplumber
 pytesseract
 Pillow
+pymongo
+pdfkit>=1.0.0
+weasyprint>=60.0  # PDF generation (pure Python, no Node.js)
+
 
