@@ -22,16 +22,17 @@ app = Flask(__name__)
 # ============================================================================
 # CORS CONFIGURATION - PRODUCTION CROSS-ORIGIN SETUP
 # ============================================================================
-# CRITICAL: Frontend is now hosted on Hostinger (https://resumeiqv1.sentiqlabs.com)
-# Backend is API-only on Render (https://recruiteriq.sentiqlabs.com)
+# ARCHITECTURE:
+#   Frontend: https://recruiteriq.sentiqlabs.com (Hostinger)
+#   Backend:  https://sentiq-recruiter.onrender.com (Render)
 # This is a cross-origin architecture requiring explicit CORS headers.
 # ============================================================================
 
 # Production origins - explicitly list all allowed frontends
 PRODUCTION_ORIGINS = [
-    "https://resumeiqv1.sentiqlabs.com",   # Primary frontend on Hostinger
+    "https://recruiteriq.sentiqlabs.com",   # RecruiterIQ frontend on Hostinger
+    "https://resumeiqv1.sentiqlabs.com",    # ResumeIQ frontend on Hostinger
     "https://resumeiq.sentiqlabs.com",      # Alternate frontend domain
-    "https://recruiteriq.sentiqlabs.com",   # RecruiterIQ frontend
 ]
 
 # Development origins - for local testing
@@ -74,6 +75,7 @@ def root():
     return jsonify({
         "service": "RecruiterIQ API",
         "status": "running",
+        "backend": "https://sentiq-recruiter.onrender.com",
         "frontend": "https://recruiteriq.sentiqlabs.com"
     })
 
